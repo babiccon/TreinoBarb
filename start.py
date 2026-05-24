@@ -52,7 +52,7 @@ def start_web():
     print(f"  PC:      {url_local}")
     print()
     print("  Celular: use o GitHub Pages (HTTPS obrigatorio para o login):")
-    print("           https://[usuario].github.io/TreinoBarb/")
+    print("           https://babiccon.github.io/TreinoBarb/")
     print()
     print("  Pressione Ctrl+C para parar.\n")
 
