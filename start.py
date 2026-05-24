@@ -45,9 +45,9 @@ def start_web():
     url_local = f"http://localhost:{port}/index.html"
 
     print()
-    print("  ╔════════════════════════════════════════════════════════╗")
-    print("  ║               Treino Tracker — Servidor                ║")
-    print("  ╚════════════════════════════════════════════════════════╝")
+    print("  ========================================================")
+    print("               Treino Tracker -- Servidor")
+    print("  ========================================================")
     print()
     print(f"  PC:      {url_local}")
     print()
