@@ -15,7 +15,7 @@ Abre automaticamente em `http://localhost:8081/index.html`.
 Via GitHub Pages (HTTPS):
 
 ```
-https://[usuario].github.io/TreinoBarb/
+https://babiccon.github.io/TreinoBarb/
 ```
 
 A autenticação por senha funciona apenas em HTTPS ou localhost (Web Crypto API). No celular, use sempre a URL do GitHub Pages.
