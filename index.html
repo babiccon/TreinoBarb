@@ -162,6 +162,10 @@ main{padding:20px 16px 80px;max-width:800px;margin:0 auto;}
 .btn-edit-entry{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:0.78rem;color:var(--muted);cursor:pointer;line-height:1;}
 .btn-edit-entry:hover{border-color:var(--accent3);color:var(--accent3);}
 .entry-actions{display:flex;flex-direction:column;gap:4px;align-items:flex-end;}
+/* ---- BACKUP ---- */
+.backup-row{display:flex;gap:8px;margin-top:24px;padding-top:16px;border-top:1px solid var(--border);}
+.btn-backup{flex:1;padding:10px;background:none;border:1.5px solid var(--border);border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:0.78rem;font-weight:600;color:var(--muted);cursor:pointer;text-align:center;letter-spacing:0.03em;}
+.btn-backup:hover{border-color:var(--text);color:var(--text);}
 </style>
 </head>
 <body>
@@ -222,6 +226,10 @@ main{padding:20px 16px 80px;max-width:800px;margin:0 auto;}
   </div>
   <div id="historyContent">
     <div class="progress-empty"><div class="big">&#128202;</div><p>Salve alguns treinos para ver sua evolucao aqui!</p></div>
+  </div>
+  <div class="backup-row">
+    <button class="btn-backup" onclick="exportBackup()">&#11015; Baixar backup</button>
+    <label class="btn-backup">&#11014; Restaurar backup<input type="file" accept=".json" onchange="importBackup(event)" style="display:none"></label>
   </div>
 </div>
 
@@ -967,6 +975,35 @@ function renderInfoCards(data, containerId, numClass, durClass) {
 function saveToStorage() {
   try { localStorage.setItem('workoutData', JSON.stringify(workoutData)); } catch(e) {}
   try { localStorage.setItem('medidasData', JSON.stringify(medidasData)); } catch(e) {}
+}
+
+// ---- BACKUP ----
+function exportBackup() {
+  var data = JSON.stringify({ workoutData: workoutData, medidasData: medidasData }, null, 2);
+  var blob = new Blob([data], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  var today = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+  a.href = url; a.download = 'treino-backup-' + today + '.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importBackup(event) {
+  var file = event.target.files[0]; if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var parsed = JSON.parse(e.target.result);
+      if (parsed.workoutData) workoutData = parsed.workoutData;
+      if (parsed.medidasData) medidasData = parsed.medidasData;
+      saveToStorage();
+      renderHistory();
+      renderQuadroSemanal();
+      showToast('Backup restaurado!');
+    } catch(err) { showToast('Arquivo invalido.'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
 }
 
 // ---- QUADRO SEMANAL ----
