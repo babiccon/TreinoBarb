@@ -163,6 +163,8 @@ main{padding:20px 16px 80px;max-width:800px;margin:0 auto;}
 .btn-edit-entry:hover{border-color:var(--accent3);color:var(--accent3);}
 .entry-actions{display:flex;flex-direction:column;gap:4px;align-items:flex-end;}
 /* ---- BACKUP ---- */
+.btn-header-backup{background:none;border:1px solid #3a3028;border-radius:6px;padding:5px 8px;font-size:1rem;cursor:pointer;color:#a09880;line-height:1;display:inline-flex;align-items:center;}
+.btn-header-backup:hover{border-color:#a09880;}
 .backup-row{display:flex;gap:8px;margin-top:24px;padding-top:16px;border-top:1px solid var(--border);}
 .btn-backup{flex:1;padding:10px;background:none;border:1.5px solid var(--border);border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:0.78rem;font-weight:600;color:var(--muted);cursor:pointer;text-align:center;letter-spacing:0.03em;}
 .btn-backup:hover{border-color:var(--text);color:var(--text);}
@@ -186,6 +188,10 @@ main{padding:20px 16px 80px;max-width:800px;margin:0 auto;}
   <div>
     <h1>Meu Treino</h1>
     <div class="header-date" id="headerDate"></div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <button class="btn-header-backup" onclick="exportBackup()" title="Baixar backup">&#128190;</button>
+    <label class="btn-header-backup" title="Restaurar backup">&#128228;<input type="file" accept=".json" onchange="importBackup(event)" style="display:none"></label>
   </div>
 </div>
 
@@ -228,8 +234,8 @@ main{padding:20px 16px 80px;max-width:800px;margin:0 auto;}
     <div class="progress-empty"><div class="big">&#128202;</div><p>Salve alguns treinos para ver sua evolucao aqui!</p></div>
   </div>
   <div class="backup-row">
-    <button class="btn-backup" onclick="exportBackup()">&#11015; Baixar backup</button>
-    <label class="btn-backup">&#11014; Restaurar backup<input type="file" accept=".json" onchange="importBackup(event)" style="display:none"></label>
+    <button class="btn-backup" onclick="exportBackup()">Baixar backup</button>
+    <label class="btn-backup">Restaurar backup<input type="file" accept=".json" onchange="importBackup(event)" style="display:none"></label>
   </div>
 </div>
 
@@ -1183,7 +1189,7 @@ function init() {
   renderInfoCards(ACTIVATION, 'activation-cards', '', '');
   renderInfoCards(STRETCHES, 'stretch-cards', 'snum', 'st');
   populateProgressSelect();
-  renderQuadroSemanal();
+  try { renderQuadroSemanal(); } catch(e) {}
 }
 init();
 </script>
