@@ -26,21 +26,36 @@ def get_local_ip():
         return "127.0.0.1"
 
 
+def kill_port(port):
+    """Mata qualquer processo usando a porta especificada (Windows)."""
+    try:
+        import subprocess
+        result = subprocess.run(
+            f'for /f "tokens=5" %a in (\'netstat -aon ^| find ":{port}" ^| find "LISTENING"\') do taskkill /f /pid %a',
+            shell=True, capture_output=True, timeout=3
+        )
+    except Exception:
+        pass
+
+
 def start_web():
     port = 8081
 
     handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=ROOT_DIR)
 
-    for attempt_port in range(port, port + 10):
+    # Tenta iniciar na porta 8081; se falhar, mata o processo que a ocupa e tenta novamente
+    for attempt in range(2):
         try:
-            server = http.server.HTTPServer(("0.0.0.0", attempt_port), handler)
-            port = attempt_port
+            server = http.server.HTTPServer(("0.0.0.0", port), handler)
             break
         except OSError:
-            continue
-    else:
-        print(f"  Erro: Não foi possível encontrar uma porta livre entre {port} e {port + 9}.")
-        return
+            if attempt == 0:
+                print(f"  Porta {port} ocupada. Liberando...")
+                kill_port(port)
+                import time; time.sleep(1)
+            else:
+                print(f"  Erro: Não foi possível iniciar na porta {port}.")
+                return
 
     url_local = f"http://localhost:{port}/index.html"
 
