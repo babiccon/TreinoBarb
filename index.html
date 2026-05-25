@@ -1034,7 +1034,7 @@ function getWeeklyStats() {
   var weekStrs = week.map(function(d) { return dateToStr(d); });
   var dayKeys = ['seg','ter','qua','qui','sex','sab','dom'];
   var days = [null,null,null,null,null,null,null];
-  var totalVol = 0; var trainedCount = 0;
+  var trainedCount = 0;
   for (var k = 0; k < dayKeys.length; k++) {
     var dk = 'day_' + dayKeys[k];
     var arr = workoutData[dk] || [];
@@ -1042,13 +1042,6 @@ function getWeeklyStats() {
       var entry = arr[i];
       var wIdx = weekStrs.indexOf(entry.date);
       if (wIdx === -1) continue;
-      var exKeys = Object.keys(entry.exercises || {});
-      for (var e = 0; e < exKeys.length; e++) {
-        var exData = entry.exercises[exKeys[e]]; var sets = exData.sets || [];
-        for (var s = 0; s < sets.length; s++) {
-          if (sets[s].kg && sets[s].reps) totalVol += Number(sets[s].kg) * Number(sets[s].reps);
-        }
-      }
       if (days[wIdx] === null) {
         var dayConfig = DAYS[dayKeys[k]];
         var muscles = (dayConfig && dayConfig.groups) ? dayConfig.groups.map(function(g) { return g.name; }) : [];
@@ -1058,7 +1051,7 @@ function getWeeklyStats() {
       }
     }
   }
-  return { days: days, totalVol: Math.round(totalVol), trainedCount: trainedCount };
+  return { days: days, trainedCount: trainedCount };
 }
 
 function renderQuadroSemanal() {
@@ -1092,8 +1085,7 @@ function renderQuadroSemanal() {
   }
   html += '</div>'
     + '<div class="qs-summary-row">'
-    + '<div class="qs-stat"><div class="qs-stat-value">' + stats.trainedCount + '</div><div class="qs-stat-label">treinos</div></div>'
-    + '<div class="qs-stat"><div class="qs-stat-value">' + (stats.totalVol > 0 ? stats.totalVol.toLocaleString('pt-BR') + ' kg' : '-') + '</div><div class="qs-stat-label">volume</div></div>'
+    + '<div class="qs-stat"><div class="qs-stat-value">' + stats.trainedCount + '/7</div><div class="qs-stat-label">treinos na semana</div></div>'
     + '</div>'
     + '</div>';
   cont.innerHTML = html;
